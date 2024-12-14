@@ -28,15 +28,15 @@ struct BaseView: View {
                 VStack(spacing:0){
                     TabView(selection: $currentTab){
                         Home(showMenu: $showMenu)
-                            .navigationBarHidden(true)
                             .tag(0)
                         Text("Profile")
-                            .navigationBarHidden(true)
                             .tag(1)
                         Text("Settings")
-                            .navigationBarHidden(true)
                             .tag(2)
+                        Text("Settings")
+                            .tag(3)
                     }
+                    .navigationBarHidden(true)
                    
                     
                     VStack(spacing:0) {
@@ -62,15 +62,20 @@ struct BaseView: View {
                             }
                         }
                 }
+                
                 SideMenu(showMenu: $showMenu)
                     .offset(x:-sidebarWidth)
                     .offset(x:offset > 0 ? offset : 0)
+                    .gesture(
+                        DragGesture()
+                            .updating($gestureOffset, body: { value, out,_ in
+                                out = value.translation.width
+                            })
+                            .onEnded(onEnd(value:))
+                    )
                 
             }
             .frame(width: UIScreen.width )
-            //.offset(x:-sidebarWidth/2)
-            //.offset(x:offset)
-            
             .gesture(
                 DragGesture()
                     .updating($gestureOffset, body: { value, out,_ in
